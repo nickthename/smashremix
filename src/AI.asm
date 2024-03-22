@@ -1365,14 +1365,19 @@ scope AI {
     // @ Description
     // DI Strengths
     scope di_strength {
-        constant HIGH(1)
-        constant MEDIUM(2)
-        constant LOW(3)
+        constant VERYHIGH(1)
+        constant HIGH(3)
+        constant MEDIUM(4)
+        constant LOW(4)
     }
 
     // @ Description
     // Stick input directions
     scope stick_direction {
+        constant WEAKLEFT(0xCB)
+        constant WEAKRIGHT(0x35)
+        constant WEAKDOWN(0xCB)
+        constant WEAKUP(0x35)
         constant LEFT(0xB0)
         constant RIGHT(0x50)
         constant DOWN(0xB0)
@@ -1398,7 +1403,7 @@ scope AI {
                 evaluate stick_y_frame_4(stick_direction.{stick_y})
             }
 
-		    STICK_Y(stick_direction.{stick_y})          // set stick y
+            STICK_Y(stick_direction.{stick_y})          // set stick y
             STICK_X(stick_direction.{stick_x}, {wait})  // set stick x, wait according to strength
             STICK_Y({stick_y_frame_2})                  // set stick y
             STICK_X({stick_x_frame_2}, {wait})          // set stick x, wait according to strength
@@ -1409,13 +1414,25 @@ scope AI {
             END()
         } else {
             evaluate wait(di_strength.{strength})
-		    STICK_Y(stick_direction.{stick_y})          // set stick y
+            STICK_Y(stick_direction.{stick_y})          // set stick y
             STICK_X(stick_direction.{stick_x}, {wait})  // set stick x, wait according to strength
-		    STICK_Y(0)                                  // stick y = 0
+            STICK_Y(0)                                  // stick y = 0
             STICK_X(0, {wait})                          // stick x = 0, wait according to strength
             END()
         }
     }
+
+    DI_SMASH_VERYHIGH_LEFT:
+        di_input(SMASH, VERYHIGH, LEFT, CENTER)
+
+    DI_SMASH_VERYHIGH_RIGHT:
+        di_input(SMASH, VERYHIGH, RIGHT, CENTER)
+
+    DI_SMASH_VERYHIGH_UP:
+        di_input(SMASH, VERYHIGH, CENTER, UP)
+
+    DI_SMASH_VERYHIGH_DOWN:
+        di_input(SMASH, VERYHIGH, CENTER, DOWN)
 
     DI_SMASH_HIGH_LEFT:
         di_input(SMASH, HIGH, LEFT, CENTER)
@@ -1442,16 +1459,28 @@ scope AI {
         di_input(SMASH, MEDIUM, CENTER, DOWN)
 
     DI_SMASH_LOW_LEFT:
-        di_input(SMASH, LOW, LEFT, CENTER)
+        di_input(SMASH, LOW, WEAKLEFT, CENTER)
 
     DI_SMASH_LOW_RIGHT:
-        di_input(SMASH, LOW, RIGHT, CENTER)
+        di_input(SMASH, LOW, WEAKRIGHT, CENTER)
 
     DI_SMASH_LOW_UP:
-        di_input(SMASH, LOW, CENTER, UP)
+        di_input(SMASH, LOW, CENTER, WEAKUP)
 
     DI_SMASH_LOW_DOWN:
-        di_input(SMASH, LOW, CENTER, DOWN)
+        di_input(SMASH, LOW, CENTER, WEAKDOWN)
+
+    DI_SLIDE_VERYHIGH_LEFT:
+        di_input(SLIDE, VERYHIGH, LEFT, CENTER)
+
+    DI_SLIDE_VERYHIGH_RIGHT:
+        di_input(SLIDE, VERYHIGH, RIGHT, CENTER)
+
+    DI_SLIDE_VERYHIGH_UP:
+        di_input(SLIDE, VERYHIGH, CENTER, UP)
+
+    DI_SLIDE_VERYHIGH_DOWN:
+        di_input(SLIDE, VERYHIGH, CENTER, DOWN)
 
     DI_SLIDE_HIGH_LEFT:
         di_input(SLIDE, HIGH, LEFT, CENTER)
@@ -1478,16 +1507,16 @@ scope AI {
         di_input(SLIDE, MEDIUM, CENTER, DOWN)
 
     DI_SLIDE_LOW_LEFT:
-        di_input(SLIDE, LOW, LEFT, CENTER)
+        di_input(SLIDE, LOW, WEAKLEFT, CENTER)
 
     DI_SLIDE_LOW_RIGHT:
-        di_input(SLIDE, LOW, RIGHT, CENTER)
+        di_input(SLIDE, LOW, WEAKRIGHT, CENTER)
 
     DI_SLIDE_LOW_UP:
-        di_input(SLIDE, LOW, CENTER, UP)
+        di_input(SLIDE, LOW, CENTER, WEAKUP)
 
     DI_SLIDE_LOW_DOWN:
-        di_input(SLIDE, LOW, CENTER, DOWN)
+        di_input(SLIDE, LOW, CENTER, WEAKDOWN)
 
 	// @ Description
 	// Copy and extend the vanilla ai cpu command table
@@ -1503,35 +1532,44 @@ scope AI {
 	dw NESS_DJC_NAIR                // 0x34
 	dw MULTI_SHINE                  // 0x35
 	dw MULTI_SHINE_TURNAROUND       // 0x36
-	dw SHIELD_DROP					// 0x37
-	dw LUCAS_BAT_BACKWARDS			// 0x38
-	dw LUCAS_BAT_FORWARDS			// 0x39
-	dw PUFF_SHORT_HOP_DAIR			// 0x3A
-	dw CLIFF_LET_GO					// 0x3B
-	dw DI_SMASH_HIGH_LEFT           // 0x3C
-	dw DI_SMASH_HIGH_RIGHT          // 0x3D
-	dw DI_SMASH_HIGH_UP             // 0x3E
-	dw DI_SMASH_HIGH_DOWN           // 0x3F
-	dw DI_SMASH_MEDIUM_LEFT         // 0x40
-	dw DI_SMASH_MEDIUM_RIGHT        // 0x41
-	dw DI_SMASH_MEDIUM_UP           // 0x42
-	dw DI_SMASH_MEDIUM_DOWN         // 0x43
-	dw DI_SMASH_LOW_LEFT            // 0x44
-	dw DI_SMASH_LOW_RIGHT           // 0x45
-	dw DI_SMASH_LOW_UP              // 0x46
-	dw DI_SMASH_LOW_DOWN            // 0x47
-	dw DI_SLIDE_HIGH_LEFT           // 0x48
-	dw DI_SLIDE_HIGH_RIGHT          // 0x49
-	dw DI_SLIDE_HIGH_UP             // 0x4A
-	dw DI_SLIDE_HIGH_DOWN           // 0x4B
-	dw DI_SLIDE_MEDIUM_LEFT         // 0x4C
-	dw DI_SLIDE_MEDIUM_RIGHT        // 0x4D
-	dw DI_SLIDE_MEDIUM_UP           // 0x4E
-	dw DI_SLIDE_MEDIUM_DOWN         // 0x4F
-	dw DI_SLIDE_LOW_LEFT            // 0x50
-	dw DI_SLIDE_LOW_RIGHT           // 0x51
-	dw DI_SLIDE_LOW_UP              // 0x52
-	dw DI_SLIDE_LOW_DOWN            // 0x53
+	dw SHIELD_DROP					        // 0x37
+	dw LUCAS_BAT_BACKWARDS			    // 0x38
+	dw LUCAS_BAT_FORWARDS			      // 0x39
+	dw PUFF_SHORT_HOP_DAIR			    // 0x3A
+	dw CLIFF_LET_GO					        // 0x3B
+
+	dw DI_SMASH_VERYHIGH_LEFT       // 0x3C
+	dw DI_SMASH_VERYHIGH_RIGHT      // 0x3D
+	dw DI_SMASH_VERYHIGH_UP         // 0x3E
+	dw DI_SMASH_VERYHIGH_DOWN       // 0x3F
+	dw DI_SMASH_HIGH_LEFT           // 0x40
+	dw DI_SMASH_HIGH_RIGHT          // 0x41
+	dw DI_SMASH_HIGH_UP             // 0x42
+	dw DI_SMASH_HIGH_DOWN           // 0x43
+	dw DI_SMASH_MEDIUM_LEFT         // 0x44
+	dw DI_SMASH_MEDIUM_RIGHT        // 0x45
+	dw DI_SMASH_MEDIUM_UP           // 0x46
+	dw DI_SMASH_MEDIUM_DOWN         // 0x47
+	dw DI_SMASH_LOW_LEFT            // 0x48
+	dw DI_SMASH_LOW_RIGHT           // 0x49
+	dw DI_SMASH_LOW_UP              // 0x4A
+	dw DI_SMASH_LOW_DOWN            // 0x4B
+	dw DI_SLIDE_VERYHIGH_LEFT       // 0x4C
+	dw DI_SLIDE_VERYHIGH_RIGHT      // 0x4D
+	dw DI_SLIDE_VERYHIGH_UP         // 0x4E
+	dw DI_SLIDE_VERYHIGH_DOWN       // 0x4F
+	dw DI_SLIDE_HIGH_LEFT           // 0x50
+	dw DI_SLIDE_HIGH_RIGHT          // 0x51
+	dw DI_SLIDE_HIGH_UP             // 0x52
+	dw DI_SLIDE_HIGH_DOWN           // 0x53
+	dw DI_SLIDE_MEDIUM_LEFT         // 0x54
+	dw DI_SLIDE_MEDIUM_RIGHT        // 0x55
+	dw DI_SLIDE_MEDIUM_UP           // 0x56
+	dw DI_SLIDE_MEDIUM_DOWN         // 0x57
+	dw DI_SLIDE_LOW_LEFT            // 0x58
+	dw DI_SLIDE_LOW_RIGHT           // 0x59
+	dw DI_SLIDE_LOW_UP              // 0x5A
+	dw DI_SLIDE_LOW_DOWN            // 0x5B
 
 	// new commands go here ^
 
@@ -1595,30 +1633,38 @@ scope AI {
 		constant LUCAS_BAT_FORWARDS(0x39)
 		constant PUFF_SHORT_HOP_DAIR(0x3A)
 		constant CLIFF_LET_GO(0x3B)
-		constant DI_SMASH_HIGH_LEFT(0x3C)
-		constant DI_SMASH_HIGH_RIGHT(0x3D)
-		constant DI_SMASH_HIGH_UP(0x3E)
-		constant DI_SMASH_HIGH_DOWN(0x3F)
-		constant DI_SMASH_MEDIUM_LEFT(0x40)
-		constant DI_SMASH_MEDIUM_RIGHT(0x41)
-		constant DI_SMASH_MEDIUM_UP(0x42)
-		constant DI_SMASH_MEDIUM_DOWN(0x43)
-		constant DI_SMASH_LOW_LEFT(0x44)
-		constant DI_SMASH_LOW_RIGHT(0x45)
-		constant DI_SMASH_LOW_UP(0x46)
-		constant DI_SMASH_LOW_DOWN(0x47)
-		constant DI_SLIDE_HIGH_LEFT(0x48)
-		constant DI_SLIDE_HIGH_RIGHT(0x49)
-		constant DI_SLIDE_HIGH_UP(0x4A)
-		constant DI_SLIDE_HIGH_DOWN(0x4B)
-		constant DI_SLIDE_MEDIUM_LEFT(0x4C)
-		constant DI_SLIDE_MEDIUM_RIGHT(0x4D)
-		constant DI_SLIDE_MEDIUM_UP(0x4E)
-		constant DI_SLIDE_MEDIUM_DOWN(0x4F)
-		constant DI_SLIDE_LOW_LEFT(0x50)
-		constant DI_SLIDE_LOW_RIGHT(0x51)
-		constant DI_SLIDE_LOW_UP(0x52)
-		constant DI_SLIDE_LOW_DOWN(0x53)
+		constant DI_SMASH_VERYHIGH_LEFT(0x3C)
+    constant DI_SMASH_VERYHIGH_RIGHT(0x3D)
+    constant DI_SMASH_VERYHIGH_UP(0x3E)
+    constant DI_SMASH_VERYHIGH_DOWN(0x3F)
+    constant DI_SMASH_HIGH_LEFT(0x40)
+    constant DI_SMASH_HIGH_RIGHT(0x41)
+    constant DI_SMASH_HIGH_UP(0x42)
+    constant DI_SMASH_HIGH_DOWN(0x43)
+    constant DI_SMASH_MEDIUM_LEFT(0x44)
+    constant DI_SMASH_MEDIUM_RIGHT(0x45)
+    constant DI_SMASH_MEDIUM_UP(0x46)
+    constant DI_SMASH_MEDIUM_DOWN(0x47)
+    constant DI_SMASH_LOW_LEFT(0x48)
+    constant DI_SMASH_LOW_RIGHT(0x49)
+    constant DI_SMASH_LOW_UP(0x4A)
+    constant DI_SMASH_LOW_DOWN(0x4B)
+    constant DI_SLIDE_VERYHIGH_LEFT(0x4C)
+    constant DI_SLIDE_VERYHIGH_RIGHT(0x4D)
+    constant DI_SLIDE_VERYHIGH_UP(0x4E)
+    constant DI_SLIDE_VERYHIGH_DOWN(0x4F)
+    constant DI_SLIDE_HIGH_LEFT(0x50)
+    constant DI_SLIDE_HIGH_RIGHT(0x51)
+    constant DI_SLIDE_HIGH_UP(0x52)
+    constant DI_SLIDE_HIGH_DOWN(0x53)
+    constant DI_SLIDE_MEDIUM_LEFT(0x54)
+    constant DI_SLIDE_MEDIUM_RIGHT(0x55)
+    constant DI_SLIDE_MEDIUM_UP(0x56)
+    constant DI_SLIDE_MEDIUM_DOWN(0x57)
+    constant DI_SLIDE_LOW_LEFT(0x58)
+    constant DI_SLIDE_LOW_RIGHT(0x59)
+    constant DI_SLIDE_LOW_UP(0x5A)
+    constant DI_SLIDE_LOW_DOWN(0x5B)
     }
 
 	// @ Description
@@ -3115,8 +3161,8 @@ scope AI {
 
             bgez    t1, _check_direction_random     // if strength is not random, skip
             nop
-            jal     Global.get_random_int_          // v0 = 0, 1 or 2
-            lli     a0, 0x0003                      // a0 = 3
+            jal     Global.get_random_int_          // v0 = 0, 1, 2 or 3
+            lli     a0, 0x0004                      // a0 = 4
             or      t1, v0, r0                      // t1 = strength index
 
             _check_direction_random:
@@ -3200,6 +3246,10 @@ scope AI {
             addiu   sp, sp, 0x0020                  // deallocate stack space
 
             smash_di_table:
+            dw DI_SMASH_VERYHIGH_LEFT
+            dw DI_SMASH_VERYHIGH_RIGHT
+            dw DI_SMASH_VERYHIGH_UP
+            dw DI_SMASH_VERYHIGH_DOWN
             dw DI_SMASH_HIGH_LEFT
             dw DI_SMASH_HIGH_RIGHT
             dw DI_SMASH_HIGH_UP
@@ -3214,6 +3264,10 @@ scope AI {
             dw DI_SMASH_LOW_DOWN
 
             slide_di_table:
+            dw DI_SLIDE_VERYHIGH_LEFT
+            dw DI_SLIDE_VERYHIGH_RIGHT
+            dw DI_SLIDE_VERYHIGH_UP
+            dw DI_SLIDE_VERYHIGH_DOWN
             dw DI_SLIDE_HIGH_LEFT
             dw DI_SLIDE_HIGH_RIGHT
             dw DI_SLIDE_HIGH_UP

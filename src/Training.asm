@@ -2391,6 +2391,7 @@ scope Training {
 
     // @ Description
     // CPU DI Strength Options
+    di_veryhigh:; db "Very High", 0x00
     di_high:; db "High", 0x00
     di_medium:; db "Medium", 0x00
     di_low:; db "Low", 0x00
@@ -2449,10 +2450,11 @@ scope Training {
 
     string_table_di_strength_options:
     dw string_random
+    dw di_veryhigh
     dw di_high
     dw di_medium
     dw di_low
-    constant DI_STRENGTH_MAX(3)
+    constant DI_STRENGTH_MAX(4)
 
     string_table_dpad_controls:
     dw Menu.bool_1
